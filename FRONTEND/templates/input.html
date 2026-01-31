@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload Food Image</title>
+<style>
+:root {
+  --accent-hue: 215;
+  --glass-bg: color-mix(in srgb, #ffffff 12%, transparent);
+  --glass-border: color-mix(in srgb, #ffffff 25%, transparent);
+  --accent: hsl(var(--accent-hue), 90%, 65%);
+  --accent-hover: color-mix(in srgb, var(--accent) 80%, #000);
+  --text-main: #f5f7ff;
+  --text-muted: color-mix(in srgb, var(--text-main) 70%, transparent);
+  --shadow-elevated: 0 12px 40px color-mix(in srgb, #000 20%, transparent);
+  --input-bg: color-mix(in srgb, #ffffff 8%, transparent);
+  --input-hover: color-mix(in srgb, #ffffff 12%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-bg: color-mix(in srgb, #1a1a2e 30%, transparent);
+    --input-bg: color-mix(in srgb, #ffffff 5%, transparent);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-block-size: 100vh;
+  display: grid;
+  place-items: center;
+  background: url("{% static "images\02.png" %}") center/cover no-repeat fixed;
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  padding-inline: 1rem;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, #6366f1 18%, transparent),
+    color-mix(in srgb, #ec4899 12%, transparent));
+  pointer-events: none;
+  z-index: -1;
+}
+
+section {
+  display: grid;
+  gap: 2rem;
+  padding-block: 2.5rem;
+  padding-inline: 2rem;
+  border-radius: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  max-inline-size: 560px;
+  inline-size: 100%;
+  box-shadow: var(--shadow-elevated);
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h2 {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(135deg, var(--text-main), var(--accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+form {
+  display: grid;
+  gap: 1.75rem;
+}
+
+form:has(input[type="file"]:invalid) label[for="file-input"] {
+  outline: 2px solid #ff4444;
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+
+.file-input-wrapper {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.file-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding-inline-start: 0.5rem;
+}
+
+input[type="file"] {
+  padding-block: 1.25rem;
+  padding-inline: 1.25rem;
+  border-radius: 16px;
+  border: 2px dashed color-mix(in srgb, var(--text-main) 30%, transparent);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  accent-color: var(--accent);
+}
+
+input[type="file"]::file-selector-button {
+  padding-block: 0.625rem;
+  padding-inline: 1.25rem;
+  margin-inline-end: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+input[type="file"]:hover {
+  border-color: var(--accent);
+  background: var(--input-hover);
+  transform: scale(1.01);
+}
+
+input[type="file"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.select-wrapper {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.select-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding-inline-start: 0.5rem;
+}
+
+select {
+  padding-block: 1rem;
+  padding-inline: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--text-main) 25%, transparent);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  accent-color: var(--accent);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23f5f7ff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-inline-end: 3rem;
+}
+
+select:hover {
+  border-color: var(--accent);
+  background-color: var(--input-hover);
+  transform: scale(1.01);
+}
+
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+button {
+  padding-block: 1.125rem;
+  padding-inline: 2rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, color-mix(in srgb, #fff 25%, transparent));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+button::after {
+  content: '→';
+  position: absolute;
+  inset-inline-end: 1.5rem;
+  inset-block-start: 50%;
+  transform: translateY(-50%) translateX(10px);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-hover);
+  padding-inline-end: 3rem;
+}
+
+button:hover::before {
+  opacity: 1;
+}
+
+button:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+button:active {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 560px) {
+  section {
+    padding-inline: 1.5rem;
+    padding-block: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  input[type="file"]::file-selector-button {
+    padding-inline: 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@container (max-width: 400px) {
+  form {
+    gap: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<section>
+  <h2>Upload Food Image</h2>
+  <form action="output" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="file-input-wrapper">
+      <label for="file-input" class="file-label">Select Food Image</label>
+      <input 
+        type="file" 
+        id="file-input"
+        name="file" 
+        accept="image/*"
+        required>
+    </div>
+    <div class="select-wrapper">
+      <label for="algorithm" class="select-label">Algorithm Selection</label>
+      <select id="algorithm" name="algo">
+        <option value="model">Deep Learning Model</option>
+      </select>
+    </div>
+    <button type="submit">Predict Calories</button>
+  </form>
+</section>
+</body>
+</html>

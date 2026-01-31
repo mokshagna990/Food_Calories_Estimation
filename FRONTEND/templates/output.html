@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prediction Result</title>
+<style>
+:root {
+  --primary-hue: 210;
+  --card-bg: color-mix(in srgb, #ffffff 18%, transparent);
+  --card-border: color-mix(in srgb, #ffffff 30%, transparent);
+  --stat-bg: color-mix(in srgb, #ffffff 22%, transparent);
+  --stat-hover: color-mix(in srgb, #ffffff 28%, transparent);
+  --primary: hsl(var(--primary-hue), 88%, 62%);
+  --text-main: #f5f7ff;
+  --text-secondary: color-mix(in srgb, var(--text-main) 80%, transparent);
+  --shadow-card: 0 20px 60px color-mix(in srgb, #000 25%, transparent);
+  --gradient-accent: linear-gradient(135deg, var(--primary), #8b5cf6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-bg: color-mix(in srgb, #1a1a2e 35%, transparent);
+    --stat-bg: color-mix(in srgb, #ffffff 15%, transparent);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-block-size: 100vh;
+  display: grid;
+  place-items: center;
+  background: url("{% static "images\03.png" %}") center/cover no-repeat fixed;
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  padding-block: 2rem;
+  padding-inline: 1rem;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, #3b82f6 15%, transparent),
+    color-mix(in srgb, #a855f7 12%, transparent));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.results {
+  container-type: inline-size;
+  container-name: results;
+  max-inline-size: 760px;
+  inline-size: 100%;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  padding-block: 2.5rem;
+  padding-inline: 2rem;
+  display: grid;
+  gap: 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+.card-header {
+  display: grid;
+  gap: 0.75rem;
+  text-align: center;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid color-mix(in srgb, var(--text-main) 15%, transparent);
+}
+
+.card-header h2 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-header h3 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  background: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.25rem;
+}
+
+@container results (max-width: 500px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@container results (max-width: 360px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat {
+  container-type: inline-size;
+  padding-block: 1.5rem;
+  padding-inline: 1.25rem;
+  border-radius: 18px;
+  background: var(--stat-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stat:hover {
+  background: var(--stat-hover);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.stat:hover::before {
+  opacity: 0.1;
+}
+
+.stat-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+@container (max-width: 180px) {
+  .stat {
+    padding-block: 1.25rem;
+    padding-inline: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+.unit {
+  font-size: 0.65em;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-inline-start: 0.25rem;
+}
+
+.actions {
+  display: grid;
+  gap: 1rem;
+  padding-block-start: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-block: 1rem;
+  padding-inline: 2rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 30%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, color-mix(in srgb, #fff 20%, transparent));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn::after {
+  content: '↑';
+  transform: rotate(90deg);
+  font-size: 1.25rem;
+  transition: transform 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:hover::after {
+  transform: rotate(90deg) translateX(4px);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding-inline: 1.5rem;
+    padding-block: 2rem;
+    border-radius: 24px;
+  }
+  
+  .card-header h3 {
+    font-size: 2rem;
+  }
+}
+
+@container results (max-width: 420px) {
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .stat-value {
+    font-size: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Loading animation for stats */
+@keyframes statAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stat {
+  animation: statAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.stat:nth-child(1) { animation-delay: 0.1s; }
+.stat:nth-child(2) { animation-delay: 0.2s; }
+.stat:nth-child(3) { animation-delay: 0.3s; }
+.stat:nth-child(4) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+<div class="results">
+  <div class="card">
+    <div class="card-header">
+      <h2>Prediction Result</h2>
+      <h3>{{ food_item }}</h3>
+    </div>
+    
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-content">
+          <div class="stat-label">Calories</div>
+          <div class="stat-value">{{ calories }}<span class="unit">kcal</span></div>
+        </div>
+      </div>
+      
+      <div class="stat">
+        <div class="stat-content">
+          <div class="stat-label">Protein</div>
+          <div class="stat-value">{{ protein }}<span class="unit">g</span></div>
+        </div>
+      </div>
+      
+      <div class="stat">
+        <div class="stat-content">
+          <div class="stat-label">Fat</div>
+          <div class="stat-value">{{ fat }}<span class="unit">g</span></div>
+        </div>
+      </div>
+      
+      <div class="stat">
+        <div class="stat-content">
+          <div class="stat-label">Carbs</div>
+          <div class="stat-value">{{ carbohydrates }}<span class="unit">g</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <a href="{% url 'input' %}" class="btn">Upload Another Image</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
